@@ -1,213 +1,116 @@
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE IF NOT EXISTS Candidato (
-  id INT PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
   senha TEXT NOT NULL,
-  estadoAfiliacao TEXT NOT NULL,
-  dataAtualizacao DATETIME NOT NULL
+  estadoAfiliacao TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS MotivoRejeicao (
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
-  descricao TEXT NOT NULL,
-  dataRejeicao DATETIME NOT NULL,
-  tipo TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS NotificacaoEmail (
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
-  destinatario TEXT NOT NULL,
-  assunto TEXT NOT NULL,
-  conteudo TEXT NOT NULL,
-  tipo TEXT NOT NULL,
-  data_envio DATETIME NOT NULL,
-  status TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS TokenValidacaoEmail (
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
-  token TEXT NOT NULL,
-  expira_em DATETIME NOT NULL,
-  usado BOOL NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Endereco(
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS Endereco (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidato_id INTEGER NOT NULL,
   logradouro TEXT NOT NULL,
-  numero INT NOT NULL,
+  numero INTEGER NOT NULL,
   complemento TEXT NOT NULL,
   bairro TEXT NOT NULL,
   cidade TEXT NOT NULL,
   uf TEXT NOT NULL,
-  cep TEXT NOT NULL
+  cep TEXT NOT NULL,
+  FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Pedido(
-  candidato_id INT REFERENCES Candidato(id),
-  termo_id INT REFERENCES Termo(id),
-  data_aceite DATETIME NOT NULL,
-  aceito BOOL NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Termo(
-  id INT PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS Termo (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   versao TEXT NOT NULL,
   conteudo TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS TermoItem(
-  termo_id INT REFERENCES Termo(id),
-  id INT PRIMARY KEY,
-  condicao TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS TermoItem (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  termo_id INTEGER NOT NULL,
+  condicao TEXT NOT NULL,
+  FOREIGN KEY (termo_id) REFERENCES Termo(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS PerfilVoluntario(
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS Pedido (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidato_id INTEGER NOT NULL,
+  termo_id INTEGER NOT NULL,
+  data_aceite TEXT NOT NULL,       -- SQLite date stored as TEXT
+  aceito INTEGER NOT NULL,         -- boolean (0/1)
+  FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE,
+  FOREIGN KEY (termo_id) REFERENCES Termo(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS PerfilVoluntario (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidato_id INTEGER NOT NULL,
   bibliografia TEXT NOT NULL,
   disponibilidade TEXT NOT NULL,
-  preferencias TEXT NOT NULL
+  preferencias TEXT NOT NULL,
+  FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Habilidade(
-  id_perfil INT REFERENCES PerfilVoluntario(id),
-  id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS Habilidade (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  perfil_id INTEGER NOT NULL,
   nome TEXT NOT NULL,
-  descricao TEXT NOT NULL
+  descricao TEXT NOT NULL,
+  FOREIGN KEY (perfil_id) REFERENCES PerfilVoluntario(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Interesse(
-  id_perfil INT REFERENCES PerfilVoluntario(id),
-  id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS Interesse (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  perfil_id INTEGER NOT NULL,
   nome TEXT NOT NULL,
-  descricao TEXT NOT NULL
+  descricao TEXT NOT NULL,
+  FOREIGN KEY (perfil_id) REFERENCES PerfilVoluntario(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS PessoaFisica(
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
-  email TEXT NOT NULL,
+CREATE TABLE IF NOT EXISTS PessoaFisica (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidato_id INTEGER NOT NULL,
   nome TEXT NOT NULL,
+  cpf TEXT NOT NULL,
   sexo TEXT NOT NULL,
-  data_nascimento DATE NOT NULL,
+  data_nascimento TEXT NOT NULL,
   nacionalidade TEXT NOT NULL,
-  profissao TEXT NOT NULL
+  profissao TEXT NOT NULL,
+  FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS PessoaJuridica(
-  candidato_id INT REFERENCES Candidato(id),
-  id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS PessoaJuridica (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidato_id INTEGER NOT NULL,
   cnpj TEXT NOT NULL,
-  razao_social TEXT NOT NULL
+  razao_social TEXT NOT NULL,
+  FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Certidao(
-  candidato_id INT REFERENCES PessoaJuridica(id),
-  id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS Representante (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  pessoa_juridica_id INTEGER NOT NULL,
+  nome TEXT NOT NULL,
+  doc_identificacao TEXT NOT NULL,
+  FOREIGN KEY (pessoa_juridica_id) REFERENCES PessoaJuridica(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Certidao (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  pessoa_juridica_id INTEGER NOT NULL,
   tipo TEXT NOT NULL,
   nome_arquivo TEXT NOT NULL,
   caminho TEXT NOT NULL,
-  data_upload DATETIME NOT NULL
+  data_upload TEXT NOT NULL,
+  FOREIGN KEY (pessoa_juridica_id) REFERENCES PessoaJuridica(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Representante(
-  candidato_id INT REFERENCES PessoaJuridica(id),
-  id INT PRIMARY KEY,
-  nome TEXT NOT NULL,
-  email TEXT NOT NULL,
-  doc_identificacao TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS TokenValidacaoEmail (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidato_id INTEGER NOT NULL,
+  token TEXT NOT NULL,
+  expira_em TEXT NOT NULL,
+  usado INTEGER NOT NULL,
+  FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE
 );
-
-
-CREATE TABLE IF NOT EXISTS Voluntario(
-  candidato_id INT REFERENCES Candidato(id),
-  ong_id INT REFERENCES Ong(id),
-  papel TEXT NOT NULL,
-  ativo BOOL NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Ong(
-  auditoria_id INT REFERENCES Auditoria(id),
-  id INT PRIMARY KEY,
-  nome TEXT NOT NULL,
-  cnpj TEXT NOT NULL,
-  descricao TEXT NOT NULL,
-  localidade TEXT NOT NULL,
-  missao TEXT NOT NULL,
-  ativa BOOL NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Vaga(
-  ong_id INT REFERENCES Ong(id),
-  id INT PRIMARY KEY,
-  cargo TEXT NOT NULL,
-  periodo TEXT NOT NULL,
-  Perfil TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS Credencial(
-    ong_id INT REFERENCES Ong(id),
-    id INT PRIMARY KEY,
-    login TEXT NOT NULL,
-    senha_temporaria TEXT NOT NULL,
-    data_expiracao DATETIME NOT NULL,
-    primeiro_acesso BOOL NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS Auditoria(
-    id INT PRIMARY KEY,
-    usuario TEXT NOT NULL,
-    acao TEXT NOT NULL,
-    data_hora DATETIME,
-    entidade TEXT NOT NULL,
-    deatlhes TEXT NOT NULL,
-    ip TEXT NOT NULL
-  );
-
-    CREATE TABLE IF NOT EXISTS Campanha(
-    ong_id INT REFERENCES Ong(id),
-    id INT PRIMARY KEY,
-    titulo TEXT NOT NULL,
-    descricao TEXT NOT NULL,
-    data_inicio DATE NOT NULL,
-    data_fim DATE NOT NULL,
-    local TEXT NOT NULL,
-    status TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS Necessidade(
-    campanha_id INT REFERENCES Campanha(id),
-    id INT PRIMARY KEY,
-    descricao TEXT NOT NULL,
-    tipo TEXT NOT NULL,
-    prioridade TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS Causa(
-    campanha_id INT REFERENCES Campanha(id),
-    id INT PRIMARY KEY,
-    nome TEXT NOT NULL,
-    categoria TEXT NOT NULL,
-    descricao TEXT NOT NULL
-  );
-
-
-  CREATE TABLE IF NOT EXISTS RepresentanteRs(
-    auditoria_id INT REFERENCES Auditoria(id),
-    id INT PRIMARY KEY,
-    nome TEXT NOT NULL,
-    email TEXT NOT NULL,
-    cargo TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS Recomendacao(
-    candidato_id INT REFERENCES Candidato(id),
-    representante_rs_id INT REFERENCES RepresentanteRs(id),
-    data_geracao DATETIME NOT NULL,
-    algoritmo TEXT NOT NULL,
-    score_aderencia DOUBLE NOT NULL,
-    status TEXT NOT NULL
-
-  );
