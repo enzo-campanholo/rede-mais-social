@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS Pedido (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   candidato_id INTEGER NOT NULL,
   termo_id INTEGER NOT NULL,
-  data_aceite TEXT NOT NULL,       -- SQLite date stored as TEXT
-  aceito INTEGER NOT NULL,         -- boolean (0/1)
+  data_aceite TEXT NOT NULL,
+  aceito INTEGER NOT NULL,
   FOREIGN KEY (candidato_id) REFERENCES Candidato(id) ON DELETE CASCADE,
   FOREIGN KEY (termo_id) REFERENCES Termo(id) ON DELETE CASCADE
 );
