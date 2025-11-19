@@ -1,24 +1,35 @@
 package models;
 
-import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 
-public class TokenValidacaoEmail extends Model {
+public class TokenValidacaoEmail {
+    private int id;
+    private int candidatoId;
+    private int token;
+    private Timestamp expiraEm;
+    private boolean usado;
 
-  public static void criar(int candidato_id, int token, Timestamp expira_em, boolean usado) {
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO TokenValidacaoEmail (candidato_id, token, expira_em, usado) VALUES (?, ?, ?, ?)");
+    public TokenValidacaoEmail() {}
 
-      stat.setInt(1, candidato_id);
-      stat.setInt(2, token);
-      stat.setTimestamp(3, expira_em);
-      stat.setBoolean(4, usado);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public TokenValidacaoEmail(int candidatoId, int token, Timestamp expiraEm, boolean usado) {
+        this.candidatoId = candidatoId;
+        this.token = token;
+        this.expiraEm = expiraEm;
+        this.usado = usado;
     }
-  }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getCandidatoId() { return candidatoId; }
+    public void setCandidatoId(int candidatoId) { this.candidatoId = candidatoId; }
+
+    public int getToken() { return token; }
+    public void setToken(int token) { this.token = token; }
+
+    public Timestamp getExpiraEm() { return expiraEm; }
+    public void setExpiraEm(Timestamp expiraEm) { this.expiraEm = expiraEm; }
+
+    public boolean isUsado() { return usado; }
+    public void setUsado(boolean usado) { this.usado = usado; }
 }

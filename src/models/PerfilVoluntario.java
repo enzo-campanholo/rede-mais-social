@@ -1,46 +1,33 @@
 package models;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+public class PerfilVoluntario {
+    private int id;
+    private int candidatoId;
+    private String bibliografia;
+    private String disponibilidade;
+    private String preferencias;
 
-public class PerfilVoluntario extends Model {
+    public PerfilVoluntario() {}
 
-  public static ResultSet buscar(int candidato_id) {
-
-    try {
-      PreparedStatement stat = connection.prepareStatement("SELECT * FROM PerfilVoluntario WHERE candidato_id = ?");
-      stat.setInt(1, candidato_id);
-
-      ResultSet res = stat.executeQuery();
-
-      if (!res.next())
-        return null;
-
-      return res;
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+    public PerfilVoluntario(int candidatoId, String bibliografia, String disponibilidade, String preferencias) {
+        this.candidatoId = candidatoId;
+        this.bibliografia = bibliografia;
+        this.disponibilidade = disponibilidade;
+        this.preferencias = preferencias;
     }
-  }
 
-  public static void criar(int candidato_id, String bibliografia,
-      String disponiblidade,
-      String preferencias) {
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO PerfilVoluntario (candidato_id, bibliografia, disponibilidade, preferencias) VALUES (?, ?, ?, ?)");
+    public int getCandidatoId() { return candidatoId; }
+    public void setCandidatoId(int candidatoId) { this.candidatoId = candidatoId; }
 
-      stat.setInt(1, candidato_id);
-      stat.setString(2, bibliografia);
-      stat.setString(3, disponiblidade);
-      stat.setString(4, preferencias);
+    public String getBibliografia() { return bibliografia; }
+    public void setBibliografia(String bibliografia) { this.bibliografia = bibliografia; }
 
-      stat.executeUpdate();
+    public String getDisponibilidade() { return disponibilidade; }
+    public void setDisponibilidade(String disponibilidade) { this.disponibilidade = disponibilidade; }
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+    public String getPreferencias() { return preferencias; }
+    public void setPreferencias(String preferencias) { this.preferencias = preferencias; }
 }

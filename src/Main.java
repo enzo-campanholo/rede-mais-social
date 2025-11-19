@@ -1,43 +1,73 @@
-import models.Model;
+import database.Database;
+import dao.*;
+import controllers.CadastroController;
+import controllers.EmailController;
+import views.CandidatoView;
 import models.Termo;
 import models.TermoItem;
-import views.Candidato;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Main {
-  public static void main(String[] args) {
+    public static void main(String[] args) {
+        // Inicializar o banco de dados
+        Database db = Database.getInstance();
+        db.init("./init.sql");
+        Connection connection = db.getConnection();
 
-    init_db();
-    init_termo();
+        // Inicializar DAOs
+        CandidatoDAO candidatoDAO = new CandidatoDAO(connection);
+        PessoaFisicaDAO pessoaFisicaDAO = new PessoaFisicaDAO(connection);
+        PessoaJuridicaDAO pessoaJuridicaDAO = new PessoaJuridicaDAO(connection);
+        RepresentanteDAO representanteDAO = new RepresentanteDAO(connection);
+        EnderecoDAO enderecoDAO = new EnderecoDAO(connection);
+        PerfilVoluntarioDAO perfilVoluntarioDAO = new PerfilVoluntarioDAO(connection);
+        HabilidadeDAO habilidadeDAO = new HabilidadeDAO(connection);
+        InteresseDAO interesseDAO = new InteresseDAO(connection);
+        TermoDAO termoDAO = new TermoDAO(connection);
+        TermoItemDAO termoItemDAO = new TermoItemDAO(connection);
+        PedidoDAO pedidoDAO = new PedidoDAO(connection);
+        TokenValidacaoEmailDAO tokenDAO = new TokenValidacaoEmailDAO(connection);
 
-    Candidato.inicio();
-  }
- 
-  public static void init_db() {
-    String url = "jdbc:sqlite:database.db";
-    String init_sql = "./init.sql";
+        // Inicializar os controladores
+        CadastroController cadastroController = new CadastroController(
+            candidatoDAO, pessoaFisicaDAO, pessoaJuridicaDAO, representanteDAO,
+            enderecoDAO, perfilVoluntarioDAO, habilidadeDAO, interesseDAO,
+            termoDAO, pedidoDAO
+        );
+        EmailController emailController = new EmailController(candidatoDAO, tokenDAO);
 
-    Model.init(url, init_sql);
-  }
+        // Inicializar dados
+        init_termo(termoDAO, termoItemDAO);
 
-  public static void init_termo() {
-    String versao = "1.0";
-    String conteudo = "Termos... ";
-
-    if (Termo.busca(versao) == null) {
-      Termo.criar(versao, conteudo);
-      int id = 1;
-      try {
-        id = Termo.busca(versao).getInt("id");
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-
-      String[] condicoes = { "condicao 1", "condicao 2", "condicao 3" };
-
-      for (String condicao : condicoes) {
-        TermoItem.criar(id, condicao);
-      }
+        // Inicializar a view
+        CandidatoView candidatoView = new CandidatoView(cadastroController, emailController);
+        candidatoView.inicio();
     }
 
-  }
+    public static void init_termo(TermoDAO termoDAO, TermoItemDAO termoItemDAO) {
+        String versao = "1.0";
+        String conteudo = "Termos... ";
+
+        try {
+            if (termoDAO.findByVersao(versao) == null) {
+                Termo termo = new Termo(versao, conteudo);
+                termoDAO.create(termo);
+                
+                Termo savedTermo = termoDAO.findByVersao(versao);
+                if (savedTermo != null) {
+                    int id = savedTermo.getId();
+                    String[] condicoes = { "condicao 1", "condicao 2", "condicao 3" };
+
+                    for (String condicao : condicoes) {
+                        TermoItem item = new TermoItem(id, condicao);
+                        termoItemDAO.create(item);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

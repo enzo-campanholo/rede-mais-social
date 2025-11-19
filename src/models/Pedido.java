@@ -1,24 +1,35 @@
 package models;
 
-import java.sql.PreparedStatement;
 import java.sql.Date;
 
-public class Pedido extends Model {
+public class Pedido {
+    private int id;
+    private int candidatoId;
+    private int termoId;
+    private Date dataAceite;
+    private boolean aceito;
 
-  public static void criar(int candidato_id, int termo_id, Date data_aceite, boolean aceito) {
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO Pedido (candidato_id, termo_id, data_aceite, aceito) VALUES (?,?,?,?)");
+    public Pedido() {}
 
-      stat.setInt(1, candidato_id);
-      stat.setInt(2, termo_id);
-      stat.setDate(3, data_aceite);
-      stat.setBoolean(4, aceito);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public Pedido(int candidatoId, int termoId, Date dataAceite, boolean aceito) {
+        this.candidatoId = candidatoId;
+        this.termoId = termoId;
+        this.dataAceite = dataAceite;
+        this.aceito = aceito;
     }
-  }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getCandidatoId() { return candidatoId; }
+    public void setCandidatoId(int candidatoId) { this.candidatoId = candidatoId; }
+
+    public int getTermoId() { return termoId; }
+    public void setTermoId(int termoId) { this.termoId = termoId; }
+
+    public Date getDataAceite() { return dataAceite; }
+    public void setDataAceite(Date dataAceite) { this.dataAceite = dataAceite; }
+
+    public boolean isAceito() { return aceito; }
+    public void setAceito(boolean aceito) { this.aceito = aceito; }
 }

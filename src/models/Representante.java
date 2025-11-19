@@ -1,21 +1,28 @@
 package models;
 
-import java.sql.PreparedStatement;
+public class Representante {
+    private int id;
+    private int pessoaJuridicaId;
+    private String nome;
+    private String docIdentificacao;
 
-public class Representante extends Model {
-  public static void criar(int pessoa_juridica_id, String nome, String doc_identificacao) {
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO Representante (pessoa_juridica_id, nome, doc_identificacao) VALUES (?, ?, ?)");
+    public Representante() {}
 
-      stat.setInt(1, pessoa_juridica_id);
-      stat.setString(2, nome);
-      stat.setString(3, doc_identificacao);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public Representante(int pessoaJuridicaId, String nome, String docIdentificacao) {
+        this.pessoaJuridicaId = pessoaJuridicaId;
+        this.nome = nome;
+        this.docIdentificacao = docIdentificacao;
     }
-  }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getPessoaJuridicaId() { return pessoaJuridicaId; }
+    public void setPessoaJuridicaId(int pessoaJuridicaId) { this.pessoaJuridicaId = pessoaJuridicaId; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getDocIdentificacao() { return docIdentificacao; }
+    public void setDocIdentificacao(String docIdentificacao) { this.docIdentificacao = docIdentificacao; }
 }

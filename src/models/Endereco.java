@@ -1,30 +1,53 @@
 package models;
 
-import java.sql.PreparedStatement;
+public class Endereco {
+    private int id;
+    private int candidatoId;
+    private String logradouro;
+    private int numero;
+    private String complemento;
+    private String bairro;
+    private String cidade;
+    private String uf;
+    private String cep;
 
-public class Endereco extends Model {
+    public Endereco() {}
 
-  public static void criar(int candidato_id, String logradouro, int numero, String complemento,
-      String bairro, String cidade,
-      String uf, String cep) {
-
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO Endereco (candidato_id, logradouro, numero, complemento, bairro, cidade, uf, cep) VALUES (?,?,?,?,?,?,?,?)");
-
-      stat.setInt(1, candidato_id);
-      stat.setString(2, logradouro);
-      stat.setInt(3, numero);
-      stat.setString(4, complemento);
-      stat.setString(5, bairro);
-      stat.setString(6, cidade);
-      stat.setString(7, uf);
-      stat.setString(8, cep);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public Endereco(int candidatoId, String logradouro, int numero, String complemento, String bairro, String cidade, String uf, String cep) {
+        this.candidatoId = candidatoId;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.cep = cep;
     }
-  }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getCandidatoId() { return candidatoId; }
+    public void setCandidatoId(int candidatoId) { this.candidatoId = candidatoId; }
+
+    public String getLogradouro() { return logradouro; }
+    public void setLogradouro(String logradouro) { this.logradouro = logradouro; }
+
+    public int getNumero() { return numero; }
+    public void setNumero(int numero) { this.numero = numero; }
+
+    public String getComplemento() { return complemento; }
+    public void setComplemento(String complemento) { this.complemento = complemento; }
+
+    public String getBairro() { return bairro; }
+    public void setBairro(String bairro) { this.bairro = bairro; }
+
+    public String getCidade() { return cidade; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
+
+    public String getUf() { return uf; }
+    public void setUf(String uf) { this.uf = uf; }
+
+    public String getCep() { return cep; }
+    public void setCep(String cep) { this.cep = cep; }
 }

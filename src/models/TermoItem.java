@@ -1,21 +1,23 @@
 package models;
 
-import java.sql.PreparedStatement;
+public class TermoItem {
+    private int id;
+    private int termoId;
+    private String condicao;
 
-public class TermoItem extends Model {
+    public TermoItem() {}
 
-  public static void criar(int termo_id, String condicao) {
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO TermoItem (termo_id, condicao) VALUES (?, ?)");
-
-      stat.setInt(1, termo_id);
-      stat.setString(2, condicao);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public TermoItem(int termoId, String condicao) {
+        this.termoId = termoId;
+        this.condicao = condicao;
     }
-  }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getTermoId() { return termoId; }
+    public void setTermoId(int termoId) { this.termoId = termoId; }
+
+    public String getCondicao() { return condicao; }
+    public void setCondicao(String condicao) { this.condicao = condicao; }
 }

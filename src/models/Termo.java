@@ -1,40 +1,23 @@
 package models;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+public class Termo {
+    private int id;
+    private String versao;
+    private String conteudo;
 
-public class Termo extends Model {
+    public Termo() {}
 
-  public static void criar(String versao, String conteudo) {
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO Termo (versao, conteudo) VALUES (?, ?)");
-
-      stat.setString(1, versao);
-      stat.setString(2, conteudo);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public Termo(String versao, String conteudo) {
+        this.versao = versao;
+        this.conteudo = conteudo;
     }
-  }
 
-  public static ResultSet busca(String versao) {
-    try {
-      PreparedStatement stat = connection.prepareStatement("SELECT * FROM Termo WHERE versao = ?");
-      stat.setString(1, versao);
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-      ResultSet res = stat.executeQuery();
+    public String getVersao() { return versao; }
+    public void setVersao(String versao) { this.versao = versao; }
 
-      if (!res.next())
-        return null;
-
-      return res;
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
+    public String getConteudo() { return conteudo; }
+    public void setConteudo(String conteudo) { this.conteudo = conteudo; }
 }

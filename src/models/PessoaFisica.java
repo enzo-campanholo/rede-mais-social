@@ -1,29 +1,50 @@
 package models;
 
-import java.sql.PreparedStatement;
 import java.sql.Date;
 
-public class PessoaFisica extends Model {
-  public static void criar(int candidato_id, String nome, String cpf, String sexo, Date data_nascimento,
-      String nacionalidade,
-      String profissao) {
+public class PessoaFisica {
+    private int id;
+    private int candidatoId;
+    private String nome;
+    private String cpf;
+    private String sexo;
+    private Date dataNascimento;
+    private String nacionalidade;
+    private String profissao;
 
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO PessoaFisica (candidato_id, nome, cpf, sexo, data_nascimento, nacionalidade, profissao) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    public PessoaFisica() {}
 
-      stat.setInt(1, candidato_id);
-      stat.setString(2, nome);
-      stat.setString(3, cpf);
-      stat.setString(4, sexo);
-      stat.setDate(5, data_nascimento);
-      stat.setString(6, nacionalidade);
-      stat.setString(7, profissao);
-
-      stat.executeUpdate();
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    public PessoaFisica(int candidatoId, String nome, String cpf, String sexo, Date dataNascimento, String nacionalidade, String profissao) {
+        this.candidatoId = candidatoId;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.sexo = sexo;
+        this.dataNascimento = dataNascimento;
+        this.nacionalidade = nacionalidade;
+        this.profissao = profissao;
     }
-  }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getCandidatoId() { return candidatoId; }
+    public void setCandidatoId(int candidatoId) { this.candidatoId = candidatoId; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
+
+    public String getSexo() { return sexo; }
+    public void setSexo(String sexo) { this.sexo = sexo; }
+
+    public Date getDataNascimento() { return dataNascimento; }
+    public void setDataNascimento(Date dataNascimento) { this.dataNascimento = dataNascimento; }
+
+    public String getNacionalidade() { return nacionalidade; }
+    public void setNacionalidade(String nacionalidade) { this.nacionalidade = nacionalidade; }
+
+    public String getProfissao() { return profissao; }
+    public void setProfissao(String profissao) { this.profissao = profissao; }
 }

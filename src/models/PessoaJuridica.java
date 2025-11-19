@@ -1,50 +1,28 @@
 package models;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+public class PessoaJuridica {
+    private int id;
+    private int candidatoId;
+    private String cnpj;
+    private String razaoSocial;
 
-public class PessoaJuridica extends Model {
-  public static ResultSet busca(String email) {
-    try {
-      PreparedStatement candidato_stat = connection.prepareStatement("SELECT * FROM Candidato WHERE email = ?");
+    public PessoaJuridica() {}
 
-      candidato_stat.setString(1, email);
-
-      ResultSet candidato_res = candidato_stat.executeQuery();
-
-      candidato_res.next();
-      int candidato_id = candidato_res.getInt("id");
-
-      PreparedStatement stat = connection.prepareStatement("SELECT * FROM PessoaJuridica WHERE candidato_id = ?");
-
-      stat.setInt(1, candidato_id);
-
-      ResultSet res = stat.executeQuery();
-
-      if (!res.next())
-        return null;
-
-      return res;
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+    public PessoaJuridica(int candidatoId, String cnpj, String razaoSocial) {
+        this.candidatoId = candidatoId;
+        this.cnpj = cnpj;
+        this.razaoSocial = razaoSocial;
     }
-  }
 
-  public static void criar(int candidato_id, String cnpj, String razao_social) {
-    try {
-      PreparedStatement stat = connection.prepareStatement(
-          "INSERT INTO PessoaJuridica (candidato_id, cnpj, razao_social) VALUES (?, ?, ?)");
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-      stat.setInt(1, candidato_id);
-      stat.setString(2, cnpj);
-      stat.setString(3, razao_social);
+    public int getCandidatoId() { return candidatoId; }
+    public void setCandidatoId(int candidatoId) { this.candidatoId = candidatoId; }
 
-      stat.executeUpdate();
+    public String getCnpj() { return cnpj; }
+    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+    public String getRazaoSocial() { return razaoSocial; }
+    public void setRazaoSocial(String razaoSocial) { this.razaoSocial = razaoSocial; }
 }
