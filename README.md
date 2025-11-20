@@ -7,7 +7,7 @@ Felipe Bonatto Zwaizdis Scaquetti - RA: 10438149
 
 ### Compilar
 ```bash
-javac -cp sqlite-jdbc.jar Main.java models/*.java views/*.java controllers/*.java dao/*.java database/*.java
+javac Main.java models/*.java views/*.java controllers/*.java dao/*.java database/*.java
 ```
 
 ### Rodar (windows)
