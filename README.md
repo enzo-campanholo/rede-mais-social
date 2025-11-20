@@ -12,10 +12,10 @@ javac -cp sqlite-jdbc.jar Main.java models/*.java views/*.java controllers/*.jav
 
 ### Rodar (windows)
 ```bash
-java -cp .;sqlite-jdbc.jar Main
+java -cp ".;sqlite-jdbc.jar" Main
 ```
 
 ### Rodar (linux)
 ```bash
-java -cp .:sqlite-jdbc.jar Main
+java -cp ".:sqlite-jdbc.jar" Main
 ```
